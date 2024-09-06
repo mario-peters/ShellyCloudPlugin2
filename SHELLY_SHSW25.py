@@ -1,5 +1,8 @@
 import DomoticzEx as Domoticz
 import SHELLY_SHSW
+import requests
+import json
+
 
 ID = "SHSW-25"
 

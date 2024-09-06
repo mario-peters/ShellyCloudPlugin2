@@ -20,35 +20,23 @@
         <param field="Address" label="IP Address" width="200px" required="true" default="127.0.0.1"/>
         <param field="Username" label="Username" width="200px" required="true"/>
         <param field="Password" label="Password" width="200px" required="true" password="true"/>
-        <param field="Mode1" label="Type" width="200px" required="true">
-            <options>
-               <option label="Shelly 1" value="SHSW-1"/>
-               <option label="Shelly IX3" value="SHIX3-1"/>
-               <option label="Shelly PM" value="SHSW-PM"/>
-               <option label="Shelly 1L" value="SHSW-L"/>
-               <option label="Shelly 2.5" value="SHSW-25"/>
-               <option label="Shelly Motion" value="SHMOS-01"/>
-               <option label="Shelly TRV" value="SHTRV-01"/>
-               <option label="Shelly Plug" value="SHPLG-S"/>
-               <option label="Shelly Bulb" value="SHBLB-1"/>
-               <option label="Shelly RGBW2" value="SHRGBW2"/>
-               <option label="Shelly Dimmer" value="SHDM-1"/>
-               <option label="Shelly H&T" value="SHHT-1"/>
-               <option label="Shelly Smoke" value="SHSM-01"/>
-               <option label="Shelly Flood" value="SHWT-1"/>
-               <option label="Shelly Door/Window 2" value="SHDW-2"/>
-               <option label="Shelly Gas" value="SHGS-1"/>
-               <option label="Shelly 3EM" value="SHEM-3"/>
-               <option label="Shelly EM" value="SHEM"/>
-            </options> 
-        </param>
-       <param field="Mode2" label="Heartbeat In Seconds" width="50px" required="true" default="30"/>
+        <param field="Mode1" label="IP-range" width="200px" required="true"/>
+        <param field="Mode2" label="Heartbeat In Seconds" width="50px" required="true" default="30"/>
     </params>
 </plugin>
 """
-import Domoticz
+import DomoticzEx as Domoticz
 import requests
 import json
+import SHELLY_SHSW25
+import SHELLY_SHSW_PM
+import SHELLY_SNSW_002P16EU
+import SHELLY_SNSW_102P16EU
+#import SHELLY_SNSW_001P16EU
+from gen23 import *
+from gen1 import *
+
+SHELLY_DEVICES = {SHELLY_SHDM_2.ID, SHELLY_SHSW25.ID, SHELLY_SHSW_PM.ID, SHELLY_SNSW_002P16EU.ID, SHELLY_SNSW_102P16EU.ID, SHELLY_SNSW_001P16EU.ID, SHELLY_SNPL_00112EU.ID, SHELLY_S3SW_001P8EU.ID}
 
 class BasePlugin:
  
@@ -73,6 +61,8 @@ class BasePlugin:
     SHELLY_EM="SHEM"
     SHELLY_3EM="SHEM-3"
 
+    #SHELLY_DEVICES = {SHELLY_SHSW25.ID, SHELLY_SHSW_PM.ID, SHELLY_SNSW_002P16EU.ID, SHELLY_SNSW_102P16EU.ID}
+
     HeartbeatInSeconds = 30
 
     def __init__(self):
@@ -86,7 +76,7 @@ class BasePlugin:
 
         Domoticz.Heartbeat(self.HeartbeatInSeconds)
 
-        createDevices()
+        createDevices(self)
 
     def onStop(self):
         Domoticz.Log("onStop called")
@@ -97,8 +87,16 @@ class BasePlugin:
     def onMessage(self, Connection, Data):
         Domoticz.Log("onMessage called")
 
-    def onCommand(self, Unit, Command, Level, Hue):
-        Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
+    def onCommand(self, DeviceID, Unit, Command, Level, Hue):
+        Domoticz.Log("onCommand called for Device " + str(DeviceID) + " Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
+        if DeviceID.startswith(SHELLY_SNSW_001P16EU.ID):
+            SHELLY_SNSW_001P16EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_SNPL_00112EU.ID):
+            SHELLY_SNPL_00112EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_S3SW_001P8EU.ID):
+            SHELLY_S3SW_001P8EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_SHDM_2.ID):
+            SHELLY_SHDM_2.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
 
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
@@ -108,6 +106,15 @@ class BasePlugin:
 
     def onHeartbeat(self):
         Domoticz.Log("onHeartbeat called")
+        for device in Devices:
+            if device.startswith(SHELLY_SNSW_001P16EU.ID):
+                SHELLY_SNSW_001P16EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SNPL_00112EU.ID):
+                SHELLY_SNPL_00112EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_S3SW_001P8EU.ID):
+                SHELLY_S3SW_001P8EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SHDM_2.ID):
+                SHELLY_SHDM_2.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
 
 global _plugin
 _plugin = BasePlugin()
@@ -128,9 +135,9 @@ def onMessage(Connection, Data):
     global _plugin
     _plugin.onMessage(Connection, Data)
 
-def onCommand(Unit, Command, Level, Hue):
+def onCommand(DeviceID, Unit, Command, Level, Hue):
     global _plugin
-    _plugin.onCommand(Unit, Command, Level, Hue)
+    _plugin.onCommand(DeviceID, Unit, Command, Level, Hue)
 
 def onNotification(Name, Subject, Text, Status, Priority, Sound, ImageFile):
     global _plugin
@@ -158,3 +165,65 @@ def DumpConfigToLog():
         Domoticz.Debug("Device sValue:   '" + Devices[x].sValue + "'")
         Domoticz.Debug("Device LastLevel: " + str(Devices[x].LastLevel))
     return
+
+def createDevices(self):
+    Domoticz.Log("CreateDevices")
+    headers = {'content-type':'application/json'}
+    count = 50
+    while count < 255:
+        ipaddress = "192.168.1."+str(count)
+        url = "http://"+ipaddress+"/shelly"
+        #Domoticz.Log(url)
+        count = count + 1
+        response_shelly = None
+        try:
+            response_shelly = requests.get(url, headers=headers, auth=(Parameters["Username"], Parameters["Password"]), timeout=1)
+        except requests.exceptions.Timeout as e:
+            Domoticz.Debug(str(e))
+        except requests.exceptions.ConnectionError as e:
+            Domoticz.Debug(str(e))
+        if response_shelly is not None and response_shelly.status_code == 200 and response_shelly.headers.get('content-type') == 'application/json':
+            Domoticz.Debug(ipaddress+" --> "+str(response_shelly.text))
+            json_items = json.loads(response_shelly.text)
+            response_shelly.close()
+            type = ""
+            mac = ""
+            for key, value in json_items.items():
+                if key == "type" or key == "model":
+                    type = value
+                if key == "mac":
+                    mac = value
+            deviceid = type+":"+mac+":"+ipaddress
+            if deviceid not in Devices:
+                deviceFound = False
+                for shelly_dev in SHELLY_DEVICES:
+                    if deviceFound == False:
+                        #if shelly_dev == type:
+                        if type == SHELLY_SHSW25.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SHSW25.create(self, mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices,type)
+                            deviceFound = True
+                        elif type == SHELLY_SHSW_PM.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SHSW_PM.create(self, mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_SNSW_001P16EU.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SNSW_001P16EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_SNPL_00112EU.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SNPL_00112EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_S3SW_001P8EU.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_S3SW_001P8EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_SHDM_2.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SHDM_2.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        else:
+                            deviceFound = False
+                if deviceFound == False:
+                    Domoticz.Log("Unknown device found for ip "+ipaddress+" and type "+type)

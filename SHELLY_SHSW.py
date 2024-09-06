@@ -35,7 +35,8 @@ def create(self, mac, ipaddress, username, password, dev,type):
                meter = {"power":0,"total":0}
                SHELLY_Meter.create(deviceid,name, meter, count, dev)
                count = count + 1
-        if len(dev[deviceid].Units.items()) > 0:
+        aDevice = dev.get(deviceid)
+        if aDevice is not None and len(aDevice.Units.items()) > 0:
             unitCheck = False
             for unit in dev[deviceid].Units.items():
                 if unit[0] == 1:
