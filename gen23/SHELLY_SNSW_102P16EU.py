@@ -1,5 +1,5 @@
 import DomoticzEx as Domoticz
-import SHELLY_SNSW_X02P16EU
+from gen23 import SHELLY_SNSW_X02P16EU
 
 ID = "SNSW-102P16EU"
 
