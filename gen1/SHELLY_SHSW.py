@@ -5,6 +5,7 @@ import SHELLY_Relay
 import SHELLY_Meter
 
 def create(self, mac, ipaddress, username, password, dev,type):
+    Domoticz.Log("SHELLY_SHSW onCreate()")
     headers = {'content-type':'application/json'}
     try:
         response_shelly = requests.get("http://"+ipaddress+"/settings", headers=headers, auth=(username, password), timeout=(10,10))
@@ -51,7 +52,7 @@ def create(self, mac, ipaddress, username, password, dev,type):
         Domoticz.Error(str(e))
 
 def onCommand(self, device_id, unit, command, Level, Color, Devices):
-    Domoticz.Debug("SHELLY_SHSW25.onCommand()")
+    Domoticz.Log("SHELLY_SHSW.onCommand()")
     url = "http://"+device_id.rpartition(":")[-1]
     headers = {'content-type':'application/json'}
     #relay
@@ -83,7 +84,7 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
             Domoticz.Log("Update "+Devices[device_id].Units[unit].Name+": Unknown command: "+str(command))
 
 def onHeartbeat(self, device):
-    Domoticz.Debug("SHELLY_SHSW25.onHeartbeat()")
+    Domoticz.Log("SHELLY_SHSW.onHeartbeat()")
     headers = {'content-type':'application/json'}
     try:
         request_shelly_status = requests.get("http://"+device.DeviceID.rpartition(":")[-1]+"/status",headers=headers, auth=(self.username, self.password), timeout=(10,10))

@@ -1,5 +1,5 @@
 import DomoticzEx as Domoticz
-import SHELLY_SHSW
+from gen1 import SHELLY_SHSW
 import requests
 import json
 
@@ -7,7 +7,7 @@ import json
 ID = "SHSW-25"
 
 def create(self, mac, ipaddress, username, password, dev,type):
-    Domoticz.Debug("SHELLY_SHSW25.onCommand()")
+    Domoticz.Log("SHELLY_SHSW25.onCommand()")
     SHELLY_SHSW.create(self, mac, ipaddress, username, password, dev,type)
     headers = {'content-type':'application/json'}
     try:
@@ -46,7 +46,7 @@ def create(self, mac, ipaddress, username, password, dev,type):
         Domoticz.Error(str(e))
 
 def onCommand(self, device_id, unit, command, Level, Color, Devices):
-    Domoticz.Debug("SHELLY_SHSW25.onCommand()")
+    Domoticz.Log("SHELLY_SHSW25.onCommand()")
     SHELLY_SHSW.onCommand(self, device_id, unit, command, Level, Color, Devices)
     url = "http://"+device_id.rpartition(":")[-1]
     headers = {'content-type':'application/json'}
@@ -71,7 +71,7 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
         Domoticz.Error(str(e))
 
 def onHeartbeat(self, device):
-    Domoticz.Debug("SHELLY_SHSW25.onHeartbeat()")
+    Domoticz.Log("SHELLY_SHSW25.onHeartbeat()")
     SHELLY_SHSW.onHeartbeat(self, device)
     headers = {'content-type':'application/json'}
     try:

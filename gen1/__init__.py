@@ -1,1 +1,1 @@
-__all__ = ["SHELLY_SHDM_2"]
+__all__ = ["SHELLY_SHDM_2", "SHELLY_SHSW25", "SHELLY_SHSW_PM"]
