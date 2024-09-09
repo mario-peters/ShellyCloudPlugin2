@@ -28,11 +28,6 @@
 import DomoticzEx as Domoticz
 import requests
 import json
-import SHELLY_SHSW25
-import SHELLY_SHSW_PM
-import SHELLY_SNSW_002P16EU
-import SHELLY_SNSW_102P16EU
-#import SHELLY_SNSW_001P16EU
 from gen23 import *
 from gen1 import *
 
