@@ -1,6 +1,6 @@
 import DomoticzEx as Domoticz
 
-def create(deviceid, relay, count, dev):
+def create(deviceid, relay, count, dev,type):
     name = ""
     ison = False
     for key, value in relay.items():
@@ -24,13 +24,13 @@ def create(deviceid, relay, count, dev):
                         unit[1].Update(Log=True)
                     unitCheck = True
             if unitCheck == False:
-                Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73).Create()
+                Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Description=type).Create()
         else:
-            Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73).Create()
+            Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Description=type).Create()
     else:
-        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73).Create()
+        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Description=type).Create()
  
-    #Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73).Create()
+    #Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Description=type).Create()
     if ison == True:
         dev[deviceid].Units[count].nValue=1
         dev[deviceid].Units[count].sValue="On"
