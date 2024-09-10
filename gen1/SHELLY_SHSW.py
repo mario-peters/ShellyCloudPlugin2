@@ -83,11 +83,11 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
         else:
             Domoticz.Log("Update "+Devices[device_id].Units[unit].Name+": Unknown command: "+str(command))
 
-def onHeartbeat(self, device):
+def onHeartbeat(device, username, password):
     Domoticz.Log("SHELLY_SHSW.onHeartbeat()")
     headers = {'content-type':'application/json'}
     try:
-        request_shelly_status = requests.get("http://"+device.DeviceID.rpartition(":")[-1]+"/status",headers=headers, auth=(self.username, self.password), timeout=(10,10))
+        request_shelly_status = requests.get("http://"+device.DeviceID.rpartition(":")[-1]+"/status",headers=headers, auth=(username, password), timeout=(10,10))
         #Domoticz.Log(request_shelly_status.text)
         json_request = json.loads(request_shelly_status.text)
         relays = None
@@ -116,7 +116,7 @@ def onHeartbeat(self, device):
                 count = 1
                 for relay in relays:
                     SHELLY_Relay.updateRelay(relay, count, device)
-                    SHELLY_Meter.updateMeter(meters[count-1], count, self, device)
+                    SHELLY_Meter.updateMeter(meters[count-1], count, device)
                     count = count + 1
         request_shelly_status.close()
     except requests.exceptions.Timeout as e:

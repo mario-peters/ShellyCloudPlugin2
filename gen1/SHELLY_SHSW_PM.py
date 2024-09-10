@@ -11,6 +11,6 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
     Domoticz.Log("SHELLY_SHSW_PM onCommand()")
     SHELLY_SHSW.onCommand(self, device_id, unit, command, Level, Color, Devices)
 
-def onHeartbeat(self, device):
+def onHeartbeat(device, username, password):
     Domoticz.Log("SHELLY_SHSW_PM onHeartbeat()")
-    SHELLY_SHSW.onHeartbeat(self, device)
+    SHELLY_SHSW.onHeartbeat(device, username, password)

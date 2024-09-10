@@ -70,12 +70,12 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
     except requests.exceptions.Timeout as e:
         Domoticz.Error(str(e))
 
-def onHeartbeat(self, device):
+def onHeartbeat(device, username, password):
     Domoticz.Log("SHELLY_SHSW25.onHeartbeat()")
-    SHELLY_SHSW.onHeartbeat(self, device)
+    SHELLY_SHSW.onHeartbeat(device, username, password)
     headers = {'content-type':'application/json'}
     try:
-        request_shelly_status = requests.get("http://"+device.DeviceID.rpartition(":")[-1]+"/status",headers=headers, auth=(self.username, self.password), timeout=(10,10))
+        request_shelly_status = requests.get("http://"+device.DeviceID.rpartition(":")[-1]+"/status",headers=headers, auth=(username, password), timeout=(10,10))
         #Domoticz.Log(request_shelly_status.text)
         json_request = json.loads(request_shelly_status.text)
         rollers = None
