@@ -46,7 +46,7 @@ def create(mac, ipaddress, username, password, dev, type):
             deviceid = type+":"+mac+":"+ipaddress
             count = 2
             relay = {"name":name}
-            name = SHELLY_Relay.create(deviceid,relay, count, dev)
+            name = SHELLY_Relay.create(deviceid,relay, count, dev, type)
             meter = {"power":0,"total":0}
             SHELLY_Meter.create(deviceid,name, meter, count, dev)
             aDevice = dev.get(deviceid)
