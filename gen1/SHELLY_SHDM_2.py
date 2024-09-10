@@ -15,7 +15,7 @@ def create(mac, ipaddress, username, password, dev, type):
         response_shelly.close()
         name = json_items["name"]
 
-        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=2, Used=1, Type=244, Subtype=73, Switchtype=7).Create()
+        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=2, Used=1, Type=244, Subtype=73, Switchtype=7, Description=ID).Create()
         if json_items["lights"][0]["ison"] == True:
             dev[deviceid].Units[2].nValue = 1
             dev[deviceid].Units[2].sValue = "On"

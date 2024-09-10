@@ -32,7 +32,7 @@ def create(self, mac, ipaddress, username, password, dev,type):
         count = 2
         if mode == "relay":
            for relay in relays:
-               name = SHELLY_Relay.create(deviceid,relay, count, dev)
+               name = SHELLY_Relay.create(deviceid,relay, count, dev,type)
                meter = {"power":0,"total":0}
                SHELLY_Meter.create(deviceid,name, meter, count, dev)
                count = count + 1

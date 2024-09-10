@@ -29,7 +29,7 @@ def create(self, mac, ipaddress, username, password, dev,type):
         count = 2
         if mode == "roller":
             for roller in rollers:
-                createRoller(deviceid,name, count, dev)
+                createRoller(deviceid,name, count, dev,type)
                 count = count + 1
         if len(dev[deviceid].Units.items()) > 0:
             unitCheck = False
@@ -102,7 +102,7 @@ def onHeartbeat(self, device):
     except requests.exceptions.Timeout as e:
         Domoticz.Error(str(e))
 
-def createRoller(deviceid,name, count,dev):
+def createRoller(deviceid,name, count,dev, type):
     if name == "" or name is None:
         name = "Roller"
     if len(dev[deviceid].Units.items()) > 0:
@@ -117,6 +117,6 @@ def createRoller(deviceid,name, count,dev):
                     unit[1].Update(Log=True)
                 unitCheck = True
         if unitCheck == False:
-            Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Switchtype=21).Create()
+            Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Switchtype=21, Description=type).Create()
     else:
-        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Switchtype=21).Create()
+        Domoticz.Unit(Name=name,DeviceID=deviceid, Unit=count, Used=1, Type=244, Subtype=73, Switchtype=21, Description=type).Create()
