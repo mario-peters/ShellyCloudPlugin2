@@ -102,14 +102,18 @@ class BasePlugin:
     def onHeartbeat(self):
         Domoticz.Log("onHeartbeat called")
         for device in Devices:
-            if device.startswith(SHELLY_SNSW_001P16EU.ID):
+            if device.startswith(SHELLY_SNSW_001P16EU.ID): #gen23
                 SHELLY_SNSW_001P16EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_SNPL_00112EU.ID):
+            elif device.startswith(SHELLY_SNPL_00112EU.ID): #gen23
                 SHELLY_SNPL_00112EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_S3SW_001P8EU.ID):
+            elif device.startswith(SHELLY_S3SW_001P8EU.ID): #gen23
                 SHELLY_S3SW_001P8EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_SHDM_2.ID):
+            elif device.startswith(SHELLY_SHDM_2.ID): #gen1
                 SHELLY_SHDM_2.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SHSW25.ID): #gen1
+                SHELLY_SHSW25.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SHSW_PM.ID): #gen1
+                SHELLY_SHSW_PM.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
 
 global _plugin
 _plugin = BasePlugin()

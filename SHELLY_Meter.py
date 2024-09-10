@@ -1,5 +1,8 @@
 import DomoticzEx as Domoticz
 
+SHELLY_EM="SHEM"
+SHELLY_3EM="SHEM-3"
+
 def create(deviceid,name, meter, count, dev):
     power = 0.0
     for key, value in meter.items():
@@ -53,7 +56,7 @@ def createTotal(deviceid,name, power, value, count, dev):
     #dev[deviceid].Units[20+count].sValue=str(power)+";"+str(total)
     #dev[deviceid].Units[20+count].Update(Log=True)
 
-def updateMeter(meter, count, self, device):
+def updateMeter(meter, count, device):
     power = ""
     for key, value in meter.items():
         if key == "power":
@@ -65,8 +68,7 @@ def updateMeter(meter, count, self, device):
     for key, value in meter.items():
         if key == "total":
             total=int(value)
-            #if Parameters["Mode1"] != self.SHELLY_EM and Parameters["Mode1"] != self.SHELLY_3EM:
-            if device.DeviceID.startswith(self.SHELLY_EM) == False and device.DeviceID.startswith(self.SHELLY_3EM) == False:
+            if device.DeviceID.startswith(SHELLY_EM) == False and device.DeviceID.startswith(SHELLY_3EM) == False:
                 total = total/60
             total=int(total)
             if device.Units[21+count].Type==243 and device.Units[21+count].SubType==29:
