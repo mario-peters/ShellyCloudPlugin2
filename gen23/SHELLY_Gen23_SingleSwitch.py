@@ -13,7 +13,7 @@ def create(mac, ipaddress, username, password, dev, type):
 
     try:
         data_401:dict[str, str] = {}
-        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, username, password, method)
+        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, method)
 
         # cnonce = str(int(time.time()))
         cnonce = str(random.randint(1000000, 9999999))  # noqa: S311
@@ -73,7 +73,7 @@ def onCommand(device_id, unit, command, Level, Hue, username, password, Devices)
 
     try:
         data_401:dict[str, str] = {}
-        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, username, password, method)
+        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, method)
 
         # cnonce = str(int(time.time()))
         cnonce = str(random.randint(1000000, 9999999))  # noqa: S311
@@ -121,7 +121,7 @@ def onHeartbeat(device, username, password):
 
     try:
         data_401:dict[str, str] = {}
-        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, username, password, method)
+        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, method)
 
         # cnonce = str(int(time.time()))
         cnonce = str(random.randint(1000000, 9999999))  # noqa: S311

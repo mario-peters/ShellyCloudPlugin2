@@ -6,9 +6,9 @@ import json
 
 ID = "SHSW-25"
 
-def create(self, mac, ipaddress, username, password, dev,type):
+def create(mac, ipaddress, username, password, dev,type):
     Domoticz.Log("SHELLY_SHSW25.onCommand()")
-    SHELLY_SHSW.create(self, mac, ipaddress, username, password, dev,type)
+    SHELLY_SHSW.create(mac, ipaddress, username, password, dev,type)
     headers = {'content-type':'application/json'}
     try:
         response_shelly = requests.get("http://"+ipaddress+"/settings", headers=headers, auth=(username, password), timeout=(10,10))
@@ -45,9 +45,9 @@ def create(self, mac, ipaddress, username, password, dev,type):
     except requests.exceptions.Timeout as e:
         Domoticz.Error(str(e))
 
-def onCommand(self, device_id, unit, command, Level, Color, Devices):
+def onCommand(device_id, unit, command, Level, Color, username, password, Devices):
     Domoticz.Log("SHELLY_SHSW25.onCommand()")
-    SHELLY_SHSW.onCommand(self, device_id, unit, command, Level, Color, Devices)
+    SHELLY_SHSW.onCommand(device_id, unit, command, Level, Color, username, password, Devices)
     url = "http://"+device_id.rpartition(":")[-1]
     headers = {'content-type':'application/json'}
     if Devices[device_id].Units[unit].SwitchType == 21:
@@ -64,7 +64,7 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
             return None
     Domoticz.Log("url: "+url)
     try:
-        response = requests.get(url,headers=headers, auth=(self.username, self.password), timeout=(10,10))
+        response = requests.get(url,headers=headers, auth=(username, password), timeout=(10,10))
         Domoticz.Debug(response.text)
         response.close()
     except requests.exceptions.Timeout as e:

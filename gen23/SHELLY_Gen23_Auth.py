@@ -18,7 +18,7 @@ def extract_data_from_401(response_header: dict[str, str]) -> dict[str, str]:
         data_401[key] = value
     return data_401
 
-def getData_401(URL_SHELLY, username, password, method):
+def getData_401(URL_SHELLY, method):
     payload_401 = {
         "id": 1,
         "method": method,

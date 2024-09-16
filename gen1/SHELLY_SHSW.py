@@ -4,7 +4,7 @@ import json
 import SHELLY_Relay
 import SHELLY_Meter
 
-def create(self, mac, ipaddress, username, password, dev,type):
+def create(mac, ipaddress, username, password, dev,type):
     Domoticz.Log("SHELLY_SHSW onCreate()")
     headers = {'content-type':'application/json'}
     try:
@@ -51,7 +51,7 @@ def create(self, mac, ipaddress, username, password, dev,type):
     except requests.exceptions.Timeout as e:
         Domoticz.Error(str(e))
 
-def onCommand(self, device_id, unit, command, Level, Color, Devices):
+def onCommand(device_id, unit, command, Level, Color, username, password, Devices):
     Domoticz.Log("SHELLY_SHSW.onCommand()")
     url = "http://"+device_id.rpartition(":")[-1]
     headers = {'content-type':'application/json'}
@@ -66,7 +66,7 @@ def onCommand(self, device_id, unit, command, Level, Color, Devices):
         return None
     Domoticz.Log("url: "+url)
     try:
-        response = requests.get(url,headers=headers, auth=(self.username, self.password), timeout=(10,10))
+        response = requests.get(url,headers=headers, auth=(username, password), timeout=(10,10))
         Domoticz.Debug(response.text)
         response.close()
     except requests.exceptions.Timeout as e:

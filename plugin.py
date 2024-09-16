@@ -84,15 +84,22 @@ class BasePlugin:
 
     def onCommand(self, DeviceID, Unit, Command, Level, Hue):
         Domoticz.Log("onCommand called for Device " + str(DeviceID) + " Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
+        #Gen1
+        if DeviceID.startswith(SHELLY_SHDM_2.ID):
+            SHELLY_SHDM_2.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_SHSW25.ID):
+            SHELLY_SWSH25.onCommand(DeviceID, Unit, Command, Level, Color, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_SHSW_PM.ID):
+            SHELLY_SHSW_PM.onCommand(DeviceID, Unit, Command, Level, Color, Parameters["Username"], Parameters["Password"], Devices)
+
+        #Gen23
         if DeviceID.startswith(SHELLY_SNSW_001P16EU.ID):
             SHELLY_SNSW_001P16EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_SNPL_00112EU.ID):
             SHELLY_SNPL_00112EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_S3SW_001P8EU.ID):
             SHELLY_S3SW_001P8EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
-        elif DeviceID.startswith(SHELLY_SHDM_2.ID):
-            SHELLY_SHDM_2.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
-
+        
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
 
@@ -102,18 +109,21 @@ class BasePlugin:
     def onHeartbeat(self):
         Domoticz.Log("onHeartbeat called")
         for device in Devices:
+            #Gen1
+            if device.startswith(SHELLY_SHDM_2.ID): #gen1
+                SHELLY_SHDM_2.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SHSW25.ID): #gen1
+                SHELLY_SHSW25.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_SHSW_PM.ID): #gen1
+                SHELLY_SHSW_PM.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+
+            #Gen23
             if device.startswith(SHELLY_SNSW_001P16EU.ID): #gen23
                 SHELLY_SNSW_001P16EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
             elif device.startswith(SHELLY_SNPL_00112EU.ID): #gen23
                 SHELLY_SNPL_00112EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
             elif device.startswith(SHELLY_S3SW_001P8EU.ID): #gen23
                 SHELLY_S3SW_001P8EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_SHDM_2.ID): #gen1
-                SHELLY_SHDM_2.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_SHSW25.ID): #gen1
-                SHELLY_SHSW25.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
-            elif device.startswith(SHELLY_SHSW_PM.ID): #gen1
-                SHELLY_SHSW_PM.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
 
 global _plugin
 _plugin = BasePlugin()
@@ -200,7 +210,7 @@ def createDevices(self):
                         #if shelly_dev == type:
                         if type == SHELLY_SHSW25.ID:
                             Domoticz.Log(type+" found with IP: "+ipaddress)
-                            SHELLY_SHSW25.create(self, mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices,type)
+                            SHELLY_SHSW25.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices,type)
                             deviceFound = True
                         elif type == SHELLY_SHSW_PM.ID:
                             Domoticz.Log(type+" found with IP: "+ipaddress)
@@ -221,6 +231,10 @@ def createDevices(self):
                         elif type == SHELLY_SHDM_2.ID:
                             Domoticz.Log(type+" found with IP: "+ipaddress)
                             SHELLY_SHDM_2.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_SNSW_102P16EU.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_SNSW_102P16EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
                             deviceFound = True
                         else:
                             deviceFound = False
