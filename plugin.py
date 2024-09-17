@@ -99,6 +99,8 @@ class BasePlugin:
             SHELLY_SNPL_00112EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_S3SW_001P8EU.ID):
             SHELLY_S3SW_001P8EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_SNSW_102P16EU.ID):
+            SHELLY_SNSW_102P16EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         
     def onNotification(self, Name, Subject, Text, Status, Priority, Sound, ImageFile):
         Domoticz.Log("Notification: " + Name + "," + Subject + "," + Text + "," + Status + "," + str(Priority) + "," + Sound + "," + ImageFile)
