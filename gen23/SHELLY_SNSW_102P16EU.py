@@ -97,6 +97,9 @@ def onCommand(device_id, unit, command, Level, Color, username, password, Device
     else:
         SHELLY_SNSW_X02P16EU.onCommand(device_id, unit, command, Level, Color, username, password, Devices)
 
-def onHeartbeat(self, device):
-    Domoticz.Debug("SHELLY_SNSW_102P16EU onHeartbeat()")
-    SHELLY_SNSW_X02P16EU.onHeartbeat(self, device)
+def onHeartbeat(device, username, password):
+    Domoticz.Log("SHELLY_SNSW_102P16EU onHeartbeat()")
+    if device.Units[2].SwitchType == 21:
+        Domoticz.Log("TODO cover mode")
+    else:
+        SHELLY_SNSW_X02P16EU.onHeartbeat(device, username, password)
