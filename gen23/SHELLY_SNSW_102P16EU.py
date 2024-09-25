@@ -46,10 +46,9 @@ def create(mac, ipaddress, username, password, dev,type):
         Domoticz.Error(str(e))
 
 def onCommand(device_id, unit, command, Level, Color, username, password, Devices):
-    Domoticz.Debug("SHELLY_SNSW_102P16EU onCommand()")
-    URL_SHELLY = f"http://"+device_id.rsplit(":",1)[1]+"/rpc"
-
+    Domoticz.Log("SHELLY_SNSW_102P16EU onCommand()")
     if Devices[device_id].Units[unit].SwitchType == 21:
+        URL_SHELLY = f"http://"+device_id.rsplit(":",1)[1]+"/rpc"
         method = ""
         params = {"id": 0}
         if str(command) == "Stop":

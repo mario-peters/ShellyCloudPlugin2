@@ -99,6 +99,64 @@ def create(mac, ipaddress, username, password, dev,type):
 
 def onCommand(device_id, unit, command, Level, Color, username, password, Devices):
     Domoticz.Debug("SHELLY_SNSW_X02P16EU onCommand()")
+    URL_SHELLY = f"http://"+device_id.rsplit(":",1)[1]+"/rpc"
+    method = "Switch.Set"
+    on = True
+    if command == "Off":
+        on = False
+
+    try:
+        data_401:dict[str, str] = {}
+        data_401 = SHELLY_Gen23_Auth.getData_401(URL_SHELLY, method)
+
+        cnonce = str(random.randint(1000000, 9999999))  # noqa: S311
+
+        resp = SHELLY_Gen23_Auth.getResponse(data_401, username, password, cnonce)
+
+        d = ""
+        if unit == 2:
+            d = {
+                "id": 1,
+                "method": method,
+                "params": {"id": 0, "on": on},
+                "auth": {
+                    "realm": data_401["realm"],
+                    "username": username,
+                    "nonce": data_401["nonce"],
+                    "cnonce": cnonce,
+                    "response": resp,
+                    "algorithm": "SHA-256",
+                },
+            }
+        elif unit == 3:
+            d = {
+                "id": 1,
+                "method": method,
+                "params": {"id": 1, "on": on},
+                "auth": {
+                    "realm": data_401["realm"],
+                    "username": username,
+                    "nonce": data_401["nonce"],
+                    "cnonce": cnonce,
+                    "response": resp,
+                    "algorithm": "SHA-256",
+                },
+            }
+        response = requests.post(URL_SHELLY, json=d, timeout=3)
+        Domoticz.Debug(str(response.text))
+        if response.status_code == 200:
+            if str(command) == "On":
+                Devices[device_id].Units[unit].nValue = 1
+                Devices[device_id].Units[unit].sValue = "On"
+                Devices[device_id].Units[unit].Update(Log=True)
+            elif str(command) == "Off":
+                Devices[device_id].Units[unit].nValue = 0
+                Devices[device_id].Units[unit].sValue = "Off"
+                Devices[device_id].Units[unit].Update(Log=True)
+            else:
+                Domoticz.Log("Update "+Devices[device_id].Units[unit].Name+": Unknown command: "+str(command))
+    except requests.exceptions.Timeout as e:
+        Domoticz.Error(str(e))
 
 def onHeartbeat(device, username, password):
     Domoticz.Log("SHELLY_SNSW_X02P16EU onHeartbeat()")
