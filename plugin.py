@@ -88,9 +88,9 @@ class BasePlugin:
         if DeviceID.startswith(SHELLY_SHDM_2.ID):
             SHELLY_SHDM_2.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_SHSW25.ID):
-            SHELLY_SWSH25.onCommand(DeviceID, Unit, Command, Level, Color, Parameters["Username"], Parameters["Password"], Devices)
+            SHELLY_SHSW25.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_SHSW_PM.ID):
-            SHELLY_SHSW_PM.onCommand(DeviceID, Unit, Command, Level, Color, Parameters["Username"], Parameters["Password"], Devices)
+            SHELLY_SHSW_PM.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
 
         #Gen23
         if DeviceID.startswith(SHELLY_SNSW_001P16EU.ID):
