@@ -31,7 +31,7 @@ import json
 from gen23 import *
 from gen1 import *
 
-SHELLY_DEVICES = {SHELLY_SHDM_2.ID, SHELLY_SHSW25.ID, SHELLY_SHSW_PM.ID, SHELLY_SNSW_002P16EU.ID, SHELLY_SNSW_102P16EU.ID, SHELLY_SNSW_001P16EU.ID, SHELLY_SNPL_00112EU.ID, SHELLY_S3SW_001P8EU.ID}
+SHELLY_DEVICES = {SHELLY_SHDM_2.ID, SHELLY_SHSW25.ID, SHELLY_SHSW_PM.ID, SHELLY_SNSW_002P16EU.ID, SHELLY_SNSW_102P16EU.ID, SHELLY_SNSW_001P16EU.ID, SHELLY_SNPL_00112EU.ID, SHELLY_S3SW_001P8EU.ID, SHELLY_S3SW_001P16EU.ID}
 
 class BasePlugin:
  
@@ -99,6 +99,8 @@ class BasePlugin:
             SHELLY_SNPL_00112EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_S3SW_001P8EU.ID):
             SHELLY_S3SW_001P8EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
+        elif DeviceID.startswith(SHELLY_S3SW_001P16EU.ID):
+            SHELLY_S3SW_001P16EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_SNSW_102P16EU.ID):
             SHELLY_SNSW_102P16EU.onCommand(DeviceID, Unit, Command, Level, Hue, Parameters["Username"], Parameters["Password"], Devices)
         elif DeviceID.startswith(SHELLY_SNSW_002P16EU.ID):
@@ -128,6 +130,8 @@ class BasePlugin:
                 SHELLY_SNPL_00112EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
             elif device.startswith(SHELLY_S3SW_001P8EU.ID): #gen23
                 SHELLY_S3SW_001P8EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
+            elif device.startswith(SHELLY_S3SW_001P16EU.ID): #gen23
+                SHELLY_S3SW_001P16EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
             elif device.startswith(SHELLY_SNSW_102P16EU.ID):
                 SHELLY_SNSW_102P16EU.onHeartbeat(Devices[device], Parameters["Username"], Parameters["Password"])
             elif device.startswith(SHELLY_SNSW_002P16EU.ID):
@@ -235,6 +239,10 @@ def createDevices(self):
                         elif type == SHELLY_S3SW_001P8EU.ID:
                             Domoticz.Log(type+" found with IP: "+ipaddress)
                             SHELLY_S3SW_001P8EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
+                            deviceFound = True
+                        elif type == SHELLY_S3SW_001P16EU.ID:
+                            Domoticz.Log(type+" found with IP: "+ipaddress)
+                            SHELLY_S3SW_001P16EU.create(mac, ipaddress, Parameters["Username"], Parameters["Password"], Devices, type)
                             deviceFound = True
                         elif type == SHELLY_SHDM_2.ID:
                             Domoticz.Log(type+" found with IP: "+ipaddress)
