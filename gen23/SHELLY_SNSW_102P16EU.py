@@ -1,5 +1,9 @@
 import DomoticzEx as Domoticz
 from gen23 import SHELLY_SNSW_X02P16EU
+import requests
+import json
+import random
+from gen23 import SHELLY_Gen23_Auth
 
 ID = "SNSW-102P16EU"
 
